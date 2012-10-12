@@ -36,6 +36,7 @@ class DictModel(object):
 class User(db.Model, DictModel):
     assignable_keywords = ['name', 'access_token', 'expires_in',
                            'refresh_token', 'weibo_id', 'openkey']
+    bot = None
 
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.Integer)  # 0: sina weibo, 1: qq weibo
@@ -113,19 +114,21 @@ class Job(db.Model):
 class Bot(db.Model, DictModel):
     assignable_keywords = ['name', 'access_token', 'expires_in',
                            'refresh_token', 'weibo_id', 'openkey',
-                           'app_key', 'app_secret', 'redirect_uri']
+                           'openid', 'app_key', 'app_secret', 'redirect_uri']
+    bot = None
 
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.Integer, default=1)  # 0: sina weibo, 1: qq weibo
 
     # weibo user infomations
     name = db.Column(db.String(100))
-    weibo_id = db.Column(db.String(150))  # qq weibo uses openid
+    weibo_id = db.Column(db.String(150))
     access_token = db.Column(db.String(200))
     expires_in = db.Column(db.String(200))
     refresh_token = db.Column(db.String(200))
     # use in qq weibo
     openkey = db.Column(db.String(200))
+    openid = db.Column(db.String(200))
 
     # app infomations
     app_key = db.Column(db.String(100))
