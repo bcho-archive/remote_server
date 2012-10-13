@@ -1,7 +1,7 @@
 #coding: utf-8
 
 import os
-
+import logging
 
 #: XXX DEV database path
 parent = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -13,6 +13,12 @@ SQLALCHEMY_DATABASE_URI = database_url
 SITE_TITLE = 'remote server'
 project_codename = 'server'  # for initing blueprint
 datetime_format = '%Y-%m-%d %H:%M:%S'
+
+logger_name = project_codename
+log_path = '%s.log' % project_codename
+log_format = '%(levelname)s - %(message)s'
+#: XXX DEV
+log_level = logging.DEBUG
 
 # weibot key & secret
 # 0: sina weibo 1: qq weibo
