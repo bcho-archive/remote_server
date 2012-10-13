@@ -25,9 +25,10 @@ weibot = {
         1: {
             'app_key': '801251861',
             'app_secret': '21565ddc17a12bae12260eed8188bcee',
-            'redirect_uri': 'http://127.0.0.1:5000/weibot/callback'
+            'redirect_uri': 'http://127.0.0.1:5000/weibot/qq/callback'
         }
 }
+qqweibot_callback_uri = 'http://127.0.0.1:5000/weibot/qqbot/callback'
 
 #: XXX DEV
 DEBUG = True

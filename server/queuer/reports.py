@@ -20,8 +20,8 @@ def enqueue(job_id, report):
         return None
 
 
-def get(job_id):
-    job = _get(Job.id == job_id and Job.status == 2)
+def get():
+    job = _get(Job.status == 2)
     if job.count():
         job = job.one()
         return job

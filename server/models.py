@@ -35,7 +35,8 @@ class DictModel(object):
 
 class User(db.Model, DictModel):
     assignable_keywords = ['name', 'access_token', 'expires_in',
-                           'refresh_token', 'weibo_id', 'openkey']
+                           'refresh_token', 'weibo_id',
+                           'openkey', 'openid']
     bot = None
 
     id = db.Column(db.Integer, primary_key=True)
@@ -54,7 +55,9 @@ class User(db.Model, DictModel):
     access_token = db.Column(db.String(200))
     expires_in = db.Column(db.String(200))
     refresh_token = db.Column(db.String(200))
-    # use in qq weibo openkey = db.Column(db.String(200))
+    # use in qq weibo
+    openkey = db.Column(db.String(200))
+    openid = db.Column(db.String(200))
 
     # one to many
     jobs = db.relationship('Job', backref='user')
@@ -63,7 +66,7 @@ class User(db.Model, DictModel):
         def build_token(salt, l=self.token_length):
             return sha(self.name + self.access_token + salt).hexdigest()[0:l]
 
-        salt = datetime.utcnow.strftime('%y%m%d%H%M%S') + str(random())
+        salt = datetime.utcnow().strftime('%y%m%d%H%M%S') + str(random())
         token = build_token(salt)
         while session.query(User).filter(User.token == token).count():
             token = build_token(salt)
@@ -107,6 +110,7 @@ class Job(db.Model):
     type = db.Column(db.Integer)
     report = db.Column(db.String(5000))
     added_time = db.Column(db.DateTime())
+    tweet_id = db.Column(db.String(100))
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
@@ -135,9 +139,10 @@ class Bot(db.Model, DictModel):
     app_secret = db.Column(db.String(100))
     redirect_uri = db.Column(db.String(1000))
 
-    def build_bot(self):
+    def build_bot(self, redirect_uri=None):
         client = QClient if self.type else SinaClient
-        bot = client(self.app_key, self.app_secret, self.redirect_uri)
+        redirect_uri = redirect_uri or self.redirect_uri
+        bot = client(self.app_key, self.app_secret, redirect_uri)
         return bot
 
     @property
