@@ -8,6 +8,13 @@ from models import db
 from config import log_path, log_format, log_level
 
 #: init logger
+# XXX every time you want to log somethings, you should
+#
+#       from base import logger
+#
+#     rather use logging.getLogger(), because the logger
+#     may not be set up. Maybe later I will fix this issue.
+#     (maybe use a logger factory will be better.)
 logger = logging.getLogger(__name__)
 logger.setLevel(log_level)
 

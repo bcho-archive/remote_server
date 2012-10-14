@@ -2,7 +2,7 @@
 
 from flask import Blueprint, request, abort, jsonify, Response
 
-from server.base import db
+from server.base import db, logger
 from server.models import User
 
 from server.queuer import reports, waitings, workings
@@ -31,6 +31,8 @@ def request_job():
     if job:
         #: enqueue job to workings, and set the status to working
         workings.enqueue(job.id)
+        logger.info('arm <%s %s> got new job <%d %s>' % (
+                    user.name, user.token, job.id, job.action))
         return jsonify(action=job.action, id=job.id)
     else:
         abort(404)
@@ -46,6 +48,8 @@ def report_job(job_id):
     if job:
         #: enqueue job to reports, and set the status to finished
         reports.enqueue(job_id, report=report)
+        logger.info('got report <%d %s> from arm <%s %s>' % (
+                    job_id, report, user.name, user.token))
         return Response(status=204)
     else:
         abort(404)

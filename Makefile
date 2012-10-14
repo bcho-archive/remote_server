@@ -3,6 +3,9 @@
 run_server:
 	python run_server.py
 
+run_bot:
+	python run_bot.py
+
 build_db:
 	python make_db.py
 

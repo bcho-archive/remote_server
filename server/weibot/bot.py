@@ -1,6 +1,6 @@
 #coding: utf-8
 
-from server.base import db
+from server.base import db, logger
 from server.models import User
 from server.queuer import reports, waitings
 
@@ -12,6 +12,8 @@ def send():
     if report:
         resp = bot.post.t__add(content=report.report)
         reports.archive(report.id)
+        logger.info('archived job <%d %s>' % (report.id, report.action))
+
         return resp
     else:
         return None
@@ -25,4 +27,5 @@ def fetch():
     mentions = timeline.data.info
     for mention in mentions:
         if not waitings.in_queue(mention.id) and _is_user(mention.name):
-            waitings.enqueue(mention.text, mention.id)
+            new_job = waitings.enqueue(mention.text, mention.id)
+            logger.info('found new job <%d %s>' % (new_job.id, new_job.action))

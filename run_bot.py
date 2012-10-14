@@ -2,10 +2,10 @@
 
 from time import sleep
 
-from server.weibot import report
+from server.weibot import bot
 
 
 while True:
-    report.fetch()
-    report.send()
+    bot.fetch()
+    bot.send()
     sleep(2)

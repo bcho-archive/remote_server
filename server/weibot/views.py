@@ -2,7 +2,7 @@
 
 from flask import Blueprint, request
 
-from server.base import db
+from server.base import db, logger
 from server.models import User, Bot
 from server.config import qqweibot_callback_uri
 
@@ -28,6 +28,7 @@ def qq_weibo_get_code():
         u.assign(resp)
         db.session.add(u)
         db.session.commit()
+        logger.info('Created new user <%s %s>' % u.name, u.openid)
 
     if not u.token:
         u.generate_token()
@@ -57,6 +58,7 @@ def qqbot_callback():
 
     qqbot.assign(resp)
     db.session.commit()
+    logger.info('Updated qq bot info <%s %s>' % (qqbot.name, qqbot.openid))
 
     return 'OK'
 
@@ -65,5 +67,5 @@ def qqbot_callback():
 def qqbot_auhorize():
     qqbot = db.session.query(Bot).filter(Bot.type == 1).one()
     bot = qqbot.build_bot(qqweibot_callback_uri)
-    return '<a href="%s">login with your qq weibo account here.</a>' % (
+    return '<a href="%s">bot, login here.</a>' % (
             bot.get_authorize_url())
