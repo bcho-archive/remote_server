@@ -40,7 +40,7 @@ class User(db.Model, DictModel):
     bot = None
 
     id = db.Column(db.Integer, primary_key=True)
-    type = db.Column(db.Integer)  # 0: sina weibo, 1: qq weibo
+    type = db.Column(db.Integer, default=1)  # 0: sina weibo, 1: qq weibo
     # for identifying the arm server
     # make it shorter: ok, we only generate a 5 character token,
     #                  which means, we can only support
@@ -79,6 +79,8 @@ class User(db.Model, DictModel):
             bot = session.query(Bot).filter(Bot.type == self.type)
             if bot.count():
                 bot = bot.all()[0].build_bot()
+            else:
+                bot = None
         self.bot = bot
 
     def get_bot(self):

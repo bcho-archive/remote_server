@@ -27,5 +27,5 @@ def fetch():
     mentions = timeline.data.info
     for mention in mentions:
         if not waitings.in_queue(mention.id) and _is_user(mention.name):
-            new_job = waitings.enqueue(mention.text, mention.id)
+            new_job = waitings.enqueue(mention.text, mention.id, mention.name)
             logger.info('found new job <%d %s>' % (new_job.id, new_job.action))

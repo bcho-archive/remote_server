@@ -13,6 +13,7 @@ def enqueue(job_id, report):
     job = _get(Job.id == job_id)
     if job.count():
         job = job.one()
+        job.report = report
         job.status = 2
         db.session.commit()
         return job
