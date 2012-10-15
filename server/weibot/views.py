@@ -28,7 +28,7 @@ def qq_weibo_get_code():
         u.assign(resp)
         db.session.add(u)
         db.session.commit()
-        logger.info('Created new user <%s %s>' % u.name, u.openid)
+        logger.info('Created new user <%s %s>' % (u.name, u.openid))
 
     if not u.token:
         u.generate_token()
