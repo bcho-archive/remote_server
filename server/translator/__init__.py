@@ -1,9 +1,7 @@
 #coding: utf-8
 
+from .human2machine import human2machine
+from .machine2human import manchine2human
 
-def human2machine(msg):
-    return msg, 0
 
-
-def machine2human(msg):
-    return msg
+__all__ = [human2machine, manchine2human]
