@@ -53,3 +53,11 @@ def report_job(job_id):
         return Response(status=204)
     else:
         abort(404)
+
+
+@app.route('/job/test', methods=['POST'])
+def test_form():
+    logger.debug(request.form.items())
+    logger.debug(request.json)
+    logger.debug(request.data)
+    return request.data
