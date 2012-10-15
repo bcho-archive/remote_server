@@ -4,7 +4,7 @@
     faker
     ~~~~~
 
-    Acts like a humanbeing, a server, a bot.
+    Acts like a human being, a server, a bot.
 '''
 
 import requests
@@ -16,7 +16,7 @@ from server.models import User, Bot
 bot = db.session.query(Bot).filter(Bot.type == 1).one()
 qqbot = bot.weibot
 user = db.session.query(User).filter(User.type == 1).all()[0]
-user.attach_bot(qqbot)
+user.attach_bot()
 userbot = user.get_bot()
 
 json_header = {'Content-Type': 'application/json'}

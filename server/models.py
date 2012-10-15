@@ -74,13 +74,12 @@ class User(db.Model, DictModel):
         session.commit()
         return token
 
-    def attach_bot(self, bot=None):
-        if not bot:
-            bot = session.query(Bot).filter(Bot.type == self.type)
-            if bot.count():
-                bot = bot.all()[0].build_bot()
-            else:
-                bot = None
+    def attach_bot(self):
+        bot = session.query(Bot).filter(Bot.type == self.type)
+        if bot.count():
+            bot = bot.all()[0].build_bot()
+        else:
+            bot = None
         self.bot = bot
 
     def get_bot(self):

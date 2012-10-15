@@ -41,8 +41,9 @@
 - 200 + json 有新工作
 
     {
-        "action": "工作内容（已经翻译成指令, e.g.: turn on A1）",
-        "id": "工作 id（一个数字，报告结果时需要）"
+        "action": "工作内容（已经翻译成指令, e.g.: turn on）",
+        "id": "工作 id（一个数字，报告结果时需要）",
+        "obj": "工作对象"
     }
 
 
@@ -51,7 +52,7 @@
 
 ### 方法
 
-    PUT http://remoteserver/arm/job/<job_id>
+    PUT http://remoteserver/arm/job/<工作 id>
 
 (不知道你们能不能用 PUT 来发送请求，如果不能可以使用 POST)
 
@@ -67,7 +68,12 @@ e.g.:
 
     {
         "token": "your_auth_code",
-        "report": "OK"
+        "report": {
+            "action": "工作内容，见上",
+            "obj": "工作对象，A1",
+            "status": "OK",  // 失败是 "FAILURE"
+            "type": 0  // 0 是开关操作，1是查询
+        }
     }
 
 
@@ -76,7 +82,12 @@ e.g.:
 
     {
         "token": "your_auth_code",
-        "report": "A1 has turned on for 2 hours"
+        "report": {
+            "action": "工作内容，见上",
+            "obj": "工作对象，A1",
+            "status": "",  // TODO 还得想想……
+            "type": 0  // 0 是开关操作，1是查询
+        }
     }
 
 
