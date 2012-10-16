@@ -43,7 +43,12 @@ def fetch_job():
 def report_job(job_id, report):
     url = 'http://localhost:5000/arm/job/%d' % job_id
     payload = token
-    token['report'] = report
+    token['report'] = {
+            'obj': 'tv',
+            'action': 'turnon',
+            'type': 0,
+            'status': report
+    }
     payload = json.dumps(payload)
     resp = requests.put(url, data=payload, headers=json_header)
     logger.info('got response <%d>' % resp.status_code)

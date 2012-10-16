@@ -10,7 +10,7 @@ from .current import bot
 def send():
     report = reports.get()
     if report:
-        resp = bot.post.t__add(content=report.report)
+        resp = bot.post.t__re_add(content=report.report, reid=report.tweet_id)
         reports.archive(report.id)
         logger.info('archived job <%d %s>' % (report.id, report.action))
 

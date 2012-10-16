@@ -39,11 +39,11 @@ ch_d = en_d.reverse()
 
 
 def job_ok(*args, **kwargs):
-    return 'OK啦！'
+    return u'OK啦！'
 
 
 def job_failure(*args, **kwargs):
-    return '出问题啦！！！！！！1 %s 不能 %s！' % (
+    return u'出问题啦！！！！！！1 %s 不能 %s！' % (
                         kwargs['obj'], kwargs['action'])
 
 #: s for sentences
