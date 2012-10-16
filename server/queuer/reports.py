@@ -5,12 +5,9 @@ from server.models import Job
 from server.translator import machine2human
 
 
-_get = lambda x: db.session.query(Job).filter(x)
-
-
 def enqueue(job_id, report):
     report = machine2human(report)
-    job = _get(Job.id == job_id)
+    job = db.session.query(Job).filter(Job.id == job_id)
     if job.count():
         job = job.one()
         job.report = report
@@ -22,7 +19,7 @@ def enqueue(job_id, report):
 
 
 def get():
-    job = _get(Job.status == 2)
+    job = db.session.query(Job).filter(Job.status == 2)
     if job.count():
         job = job.one()
         return job
@@ -31,7 +28,7 @@ def get():
 
 
 def archive(job_id):
-    job = _get(Job.id == job_id)
+    job = db.session.query(Job).filter(Job.id == job_id, Job.status == 2)
     if job.count():
         job = job.one()
         job.status = 3
