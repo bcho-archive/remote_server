@@ -85,8 +85,13 @@ e.g.:
         "report": {
             "action": "工作内容，见上",
             "obj": "工作对象，A1",
-            "status": "",  // TODO 还得想想……
-            "type": 0  // 0 是开关操作，1是查询
+            "status": {
+                "hours": 1,
+                "minutes": 2,
+                "seconds": 3,
+                "type": "works_duration" // 描述查询类型
+            },
+            "type": 1  // 0 是开关操作，1是查询
         }
     }
 
