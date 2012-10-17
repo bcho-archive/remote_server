@@ -2,7 +2,8 @@
 
 from server.base import db, logger
 from server.models import User
-from server.queuer import reports, waitings
+from server.queuer import reports, waitings, unknown
+from server.translator.dictionary import s
 
 from .current import bot
 
@@ -19,6 +20,11 @@ def send():
         return None
 
 
+def repost(somethings, repost_id):
+    '''repost a tweet'''
+    bot.post.t__re_add(content=somethings, reid=repost_id)
+
+
 def fetch():
     def _is_user(name):
         return db.session.query(User).filter(User.name == name).count() > 0
@@ -26,6 +32,12 @@ def fetch():
     timeline = bot.get.statuses__mentions_timeline()
     mentions = timeline.data.info
     for mention in mentions:
-        if not waitings.in_queue(mention.id) and _is_user(mention.name):
+        if not waitings.in_queue(mention.id) and _is_user(mention.name) and\
+                not unknown.in_queue(mention.id):
             new_job = waitings.enqueue(mention.text, mention.id, mention.name)
-            logger.info('found new job <%d %s>' % (new_job.id, new_job.action))
+            if new_job:
+                logger.info('found new job <%d %s>' % (
+                                    new_job.id, new_job.action))
+            else:
+                unknown.enqueue(mention.id)
+                repost(s['unknowncommand'](), mention.id)

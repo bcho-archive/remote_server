@@ -8,19 +8,24 @@ from server.translator import human2machine
 
 
 def enqueue(action, tweet_id, username):
-    action, action_t = human2machine(action)
-    user = db.session.query(User).filter(User.name == username).one()
-    job = Job()
-    job.action = action
-    job.tweet_id = tweet_id
-    job.type = action_t
-    job.status = 0
-    job.added_time = datetime.utcnow()
-    db.session.add(job)
-    job.user = user
-    logger.debug(user.name)
-    db.session.commit()
-    return job
+    summary = human2machine(action)
+    if summary:
+        action, action_type, obj = summary
+        action = '%s %s' % (action, obj)
+        user = db.session.query(User).filter(User.name == username).one()
+        job = Job()
+        job.action = action
+        job.tweet_id = tweet_id
+        job.type = action_type
+        job.status = 0
+        job.added_time = datetime.utcnow()
+        db.session.add(job)
+        job.user = user
+        logger.debug(user.name)
+        db.session.commit()
+        return job
+    else:
+        return None
 
 
 def in_queue(tweet_id):

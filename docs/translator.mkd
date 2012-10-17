@@ -1,0 +1,47 @@
+# translator
+
+
+## some examples
+
+    帮 我 打开 电视
+
+in our dictionary:
+
+    帮 => not found
+
+    我 => not found
+
+    打开 => turnon (action)
+
+    电视 => tv (obj)
+
+so the command should be
+
+    {
+        "action": "turnon",
+        "obj": "tv",
+        "type": 0
+    }
+
+
+   电视 的 状态 如何 了？
+
+in our dictionary:
+
+    电视 => tv (obj)
+
+    的 => not found
+
+    状态 => query (action)
+
+    如何 => not found
+
+    了 => not found
+
+so the command should be
+
+    {
+        "action": "query",
+        "obj": "tv",
+        "type": 1
+    }
