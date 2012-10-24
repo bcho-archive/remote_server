@@ -90,7 +90,7 @@ class User(db.Model, DictModel):
                                       self.expires_in)
         return self.bot
 
-    def refresh_token(self):
+    def refresh_weibo_token(self):
         if not self.bot:
             self.attach_bot()
         #: is qq weibo
