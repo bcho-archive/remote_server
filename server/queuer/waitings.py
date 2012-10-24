@@ -11,10 +11,10 @@ def enqueue(action, tweet_id, username):
     summary = human2machine(action)
     if summary:
         action, action_type, obj = summary
-        action = '%s %s' % (action, obj)
         user = db.session.query(User).filter(User.name == username).one()
         job = Job()
         job.action = action
+        job.obj = obj
         job.tweet_id = tweet_id
         job.type = action_type
         job.status = 0

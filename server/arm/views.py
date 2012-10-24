@@ -33,9 +33,9 @@ def request_job():
     if job:
         #: enqueue job to workings, and set the status to working
         workings.enqueue(job.id)
-        logger.info('arm <%s %s> got new job <%d %s>' % (
-                    user.name, user.token, job.id, job.action))
-        return jsonify(action=job.action, id=str(job.id))
+        logger.info('arm <%s %s> got new job <%d %s %s>' % (
+                    user.name, user.token, job.id, job.action, job.obj))
+        return jsonify(action=job.action, obj=job.obj, id=str(job.id))
     else:
         return jsonify(action='none'), 404
 
