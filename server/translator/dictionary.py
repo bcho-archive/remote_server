@@ -16,10 +16,14 @@ class Dict(dict):
             else:
                 self[name].append(value)
 
-    def get(self, attr, default=None):
+    def get(self, attr, default=[]):
         # when self[name] is not found, return name
         # instead of None
-        default = default or attr
+        if not isinstance(default, list):
+            default = [default]
+        default = default or [attr]
+        if not isinstance(default, list):
+            default = [default]
         return super(Dict, self).get(attr, default)
 
     def reverse(self):
@@ -31,23 +35,63 @@ class Dict(dict):
 
 #: d for dictionary
 en_d = Dict((
-    ('turnoff', u'关闭'), ('turnon', u'打开'),
-    ('turnon', u'开')
+    ('turnoff', u'关闭'), ('turnoff', u'关'),
+    ('turnon', u'打开'), ('turnon', u'开'),
+    ('query', u'状态'), ('query', u'情况'),
+
+    ('tv', u'电视'), ('tv', u'电视机'),
+    ('aircondictioner', u'空调'), ('aircondictionoar', u'冷气机'),
+    ('A1', 'A1'),
+
+    ('hours', u'小时'), ('hour', u'小时'), ('hr', u'小时'),
+    ('minutes', u'分钟'), ('minute', u'分钟'), ('min', u'分钟'),
+    ('seconds', u'秒'), ('second', u'秒'), ('sec', u'秒')
 ))
 
 ch_d = en_d.reverse()
 
+type_d = Dict((
+    ('turnon', 'action'), ('turnoff', 'action'),
+    ('query', 'action'),
+
+    ('tv', 'obj'), ('aircondictioner', 'obj'),
+    ('A1', 'obj')
+))
+
+action_type_d = Dict((
+    ('turnon', 0), ('turnoff', 0),
+    ('query', 1)
+))
+
+
+#: some sentence builders
+
 
 def job_ok(*args, **kwargs):
-    return 'OK啦！'
+    return u'OK啦！'
 
 
 def job_failure(*args, **kwargs):
-    return '出问题啦！！！！！！1 %s 不能 %s！' % (
+    return u'出问题啦！！！！！！1 你家的%s不能%s！' % (
                         kwargs['obj'], kwargs['action'])
+
+
+def works_duration(*args, **kwargs):
+    basic = u'你家的%s已经工作' % (kwargs['obj'])
+    for eng in ('hours', 'minutes', 'seconds'):
+        if eng in kwargs.keys():
+            basic += ' %d %s' % (kwargs[eng], en_d.get(eng)[0])
+    return basic + u'了'
+
+
+def unknown_command(*args, **kwargs):
+    return u'我不懂你的意思……'
+
 
 #: s for sentences
 s = {
     'OK': job_ok,
-    'FAILURE': job_failure
+    'FAILURE': job_failure,
+    'works_duration': works_duration,
+    'unknowncommand': unknown_command
 }

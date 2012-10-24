@@ -36,14 +36,19 @@
 
 - 403 `auth` 认证没有通过
 
-- 404 没有新工作
+- 404 + json 没有新工作
+
+    {
+        "action": "none"
+    }
 
 - 200 + json 有新工作
 
     {
-        "action": "工作内容（已经翻译成指令, e.g.: turn on）",
+        "action": "工作内容（已经翻译成指令, e.g.: turnon）",
+        "obj": "工作对象",
         "id": "工作 id（一个数字，报告结果时需要）",
-        "obj": "工作对象"
+        "time": -1 (<= 0 不重复，> 0 每 `time`s 重复一次)
     }
 
 
@@ -70,7 +75,7 @@ e.g.:
         "token": "your_auth_code",
         "report": {
             "action": "工作内容，见上",
-            "obj": "工作对象，A1",
+            "obj": "工作对象",
             "status": "OK",  // 失败是 "FAILURE"
             "type": 0  // 0 是开关操作，1是查询
         }
@@ -84,9 +89,14 @@ e.g.:
         "token": "your_auth_code",
         "report": {
             "action": "工作内容，见上",
-            "obj": "工作对象，A1",
-            "status": "",  // TODO 还得想想……
-            "type": 0  // 0 是开关操作，1是查询
+            "obj": "工作对象",
+            "status": {
+                "hours": 1,
+                "minutes": 2,
+                "seconds": 3,
+                "type": "works_duration" // 描述查询类型
+            },
+            "type": 1  // 0 是开关操作，1是查询
         }
     }
 
