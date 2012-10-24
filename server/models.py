@@ -106,9 +106,16 @@ class Job(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     action = db.Column(db.String(1000))
     obj = db.Column(db.String(1000))
-    # 0 waiting 1 doing 2 finished(not report yet) 3 reported
+    #: 0 waiting 1 doing 2 finished(not be reported yet) 3 reported
     status = db.Column(db.Integer, default=0)
-    # 0 action 1 quering
+
+    # repated job:
+    # if repeated (n) > 0, the work should run every n seceond
+    # in the arm server, and we only treat the job as the normal one,
+    # besides it cannot be archived and the status always lower than 3
+    repeated = db.Column(db.Integer, default=0)
+
+    #: 0 action 1 quering
     type = db.Column(db.Integer)
     report = db.Column(db.String(5000))
     added_time = db.Column(db.DateTime())
