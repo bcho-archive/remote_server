@@ -1,5 +1,6 @@
 #coding: utf-8
 
+import json
 from flask import Blueprint, request, abort, jsonify, Response
 
 from server.base import db, logger
@@ -11,9 +12,10 @@ app = Blueprint('arm', __name__)
 
 
 def auth():
-    if request.json and request.json['token']:
-        user = db.session.query(User).filter(
-                User.token == request.json['token'])
+    # FIXME insecurity data transfering
+    if request.args and request.args['data']:
+        token = json.loads(request.args['data'])['token']
+        user = db.session.query(User).filter(User.token == token)
         if user.count():
             return user.one()
         else:
@@ -33,17 +35,19 @@ def request_job():
         workings.enqueue(job.id)
         logger.info('arm <%s %s> got new job <%d %s>' % (
                     user.name, user.token, job.id, job.action))
-        return jsonify(action=job.action, id=job.id)
+        return jsonify(action=job.action, id=str(job.id))
     else:
-        abort(404)
+        return jsonify(action='none'), 404
 
 
-@app.route('/job/<int:job_id>', methods=['PUT'])
+@app.route('/job/<int:job_id>', methods=['GET', 'POST'])
 def report_job(job_id):
     user = auth()
     if not user:
         abort(403)
-    report = request.json['report']
+    # FIXME insecurity data transfering
+    data = json.loads(request.args['data'])
+    report = data['report']
     job = workings.get(job_id)
     if job:
         #: enqueue job to reports, and set the status to finished
