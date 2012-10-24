@@ -1,0 +1,7 @@
+# rebuild
+
+## rebuild table
+
+1. drop table in sqlite3
+
+2. `db.create_all()`
