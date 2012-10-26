@@ -108,7 +108,7 @@ class Job(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     action = db.Column(db.String(1000))
     obj = db.Column(db.String(1000))
-    #: 0 waiting 1 doing 2 finished(not be reported yet) 3 reported
+    #: -1 unknown 0 waiting 1 doing 2 finished(not be reported yet) 3 reported
     status = db.Column(db.Integer, default=0)
 
     # repated job:
