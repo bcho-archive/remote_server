@@ -90,12 +90,14 @@ class User(db.Model, DictModel):
                                       self.expires_in)
         return self.bot
 
-    def refresh_token(self):
+    def refresh_weibo_token(self):
+        # TODO auto refresh
+        #      Refreshtoken is abolished in qq weibo
         if not self.bot:
             self.attach_bot()
         #: is qq weibo
         if self.type == 1:
-            self.assign(**self.bot.refresh_token(self.refresh_token))
+            self.assign(self.bot.refresh_token(self.refresh_token))
             session.commit()
             return True
         else:

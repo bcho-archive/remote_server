@@ -15,20 +15,23 @@ def qq_weibo_get_code():
     openid = request.args['openid']
     openkey = request.args['openkey']
 
+    qqbot = db.session.query(Bot).filter(Bot.type == 1).one()
+    bot = qqbot.build_bot()
+    resp = bot.request_access_token(code)
+    resp.openid = openid
+    resp.openkey = openkey
+    logger.debug(resp)
+
     u = db.session.query(User).filter(User.openid == openid)
     if u.count():
         u = u.one()
+        u.assign(resp)
     else:
-        qqbot = db.session.query(Bot).filter(Bot.type == 1).one()
-        bot = qqbot.build_bot()
-        resp = bot.request_access_token(code)
-        resp.openid = openid
-        resp.openkey = openkey
         u = User()
         u.assign(resp)
         db.session.add(u)
-        db.session.commit()
         logger.info('Created new user <%s %s>' % (u.name, u.openid))
+    db.session.commit()
 
     if not u.token:
         u.generate_token()

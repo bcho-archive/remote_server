@@ -220,6 +220,9 @@ class APIClient(object):
                 client_secret = self.client_secret, \
                 refresh_token = refresh_token, \
                 grant_type = 'refresh_token')
+        #: FIXME debug for refresh token
+        from server.base import logger
+        logger.debug('refresh token body:\n%s' % body)
         r = _obj_hook(dict([p.split('=') for p in body.split('&')]))
         r.expires_in = int(r.expires_in) + int(time.time())
         return r
