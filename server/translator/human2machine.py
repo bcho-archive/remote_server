@@ -8,6 +8,9 @@ from dictionary import ch_d, type_d, action_type_d
 
 # Buggy translating
 #
+# Short: this is a simple dictionary to translate the human order to machine
+#        order, everything is hardcode.
+#
 # In order to translate the human sentence to machine order, we first do a
 # language segment (currently using [gkseg](http://github/guokr/gkseg), slow
 # but useful), to extract the important part. Then, we look up the word from
@@ -16,7 +19,7 @@ from dictionary import ch_d, type_d, action_type_d
 # dictionary to determain the action type.
 #
 # I know it's really hard-coding, buggy and useless, but NLP is not a easy
-# problem for me now...
+# task for me now...
 def human2machine(msg):
     if not isinstance(msg, unicode):
         msg = msg.decode('utf-8')
@@ -26,7 +29,7 @@ def human2machine(msg):
     action_type = None
     obj = None
     repeated_duration = 0
-    # FIXME if send a msg: '每30分钟检查一次空调'
+    # FIXME if send a msg like '每30分钟检查一次空调'
     #       after the segment, it will be:
     #           [u'\u6bcf3', u'0', u'\u5206\u949f', u'\u68c0\u67e5', u'\u4e00',
     #            u'\u6b21', u'\u7a7a\u8c03']
@@ -34,7 +37,11 @@ def human2machine(msg):
     for word in seg.term(msg):
         #: is it a repeated job?
         try:
-            repeated_duration = int(word)
+            # TODO time unit determinations
+            #      I just suppose all the repeat interval
+            #      is **minute** base. But the arm side
+            #      uses **second**.
+            repeated_duration = int(word) * 60
         except ValueError:
             #: tranlate the word
             en = ch_d.get(word, None)[0]
