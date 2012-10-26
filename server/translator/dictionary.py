@@ -37,7 +37,8 @@ class Dict(dict):
 en_d = Dict((
     ('turnoff', u'关闭'), ('turnoff', u'关'),
     ('turnon', u'打开'), ('turnon', u'开'),
-    ('query', u'状态'), ('query', u'情况'),
+    ('query', u'状态'), ('query', u'情况'), ('query', u'检查'),
+    ('query', u'查询'),
 
     ('tv', u'电视'), ('tv', u'电视机'),
     ('aircondictioner', u'空调'), ('aircondictionoar', u'冷气机'),
