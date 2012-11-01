@@ -15,7 +15,7 @@ SQLALCHEMY_DATABASE_URI = database_url
 SITE_TITLE = 'remote server'
 project_codename = 'server'  # for initing blueprint
 datetime_format = '%Y-%m-%d %H:%M:%S'
-image_path = os.path.join(parent, 'imgs')
+image_path = os.path.join(parent, 'data', 'imgs')
 unknown_command_path = os.path.join(parent, 'data', 'unkown.txt')
 
 logger_name = project_codename
