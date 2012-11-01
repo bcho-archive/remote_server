@@ -23,7 +23,7 @@ def enqueue(id, text):
         db.session.commit()
 
         f = open(unknown_command_path, 'a')
-        f.write('%s\n' % text)
+        f.write('%s\n' % text.encode('utf-8'))
         f.close()
 
         return j
