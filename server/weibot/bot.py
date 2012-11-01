@@ -53,5 +53,5 @@ def fetch():
                 logger.info('found new job <%d %s>' % (
                                     new_job.id, new_job.action))
             else:
-                unknown.enqueue(mention.id)
+                unknown.enqueue(mention.id, mention.text)
                 repost(s['unknowncommand'](), mention.id)
