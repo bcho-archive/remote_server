@@ -18,4 +18,4 @@ def machine2human(report):
 
     #: is a query all
     if action_type == 1 and report['obj'] == 'all':
-        return s['query_all'](action=action, obj=obj, **status)
+        return s['query_all'](action=action, obj=obj)

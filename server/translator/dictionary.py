@@ -125,3 +125,11 @@ s = {
     'query_all': query_all,
     'unknowncommand': unknown_command
 }
+
+
+#: h for hard-coding
+_query_all = ('query', 1, 'all', 0)
+h_d = Dict((
+    (u'家里的用电器怎样啦', _query_all),
+    (u'检查家里的用电器情况', _query_all)
+))

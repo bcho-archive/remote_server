@@ -3,7 +3,7 @@
 import gkseg as seg
 
 from server.base import logger
-from dictionary import ch_d, type_d, action_type_d
+from dictionary import ch_d, type_d, action_type_d, h_d
 
 
 # Buggy translating
@@ -23,6 +23,11 @@ from dictionary import ch_d, type_d, action_type_d
 def human2machine(msg):
     if not isinstance(msg, unicode):
         msg = msg.decode('utf-8')
+    # process with some hard code translations first
+    for k, v in h_d.items():
+        if msg in k:
+            return v
+
     seg.init()
 
     action = None
