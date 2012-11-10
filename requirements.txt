@@ -5,3 +5,4 @@ SQLAlchemy==0.7.9
 Werkzeug==0.8.3
 requests==0.14.1
 wsgiref==0.1.2
+jieba==0.20

@@ -1,9 +1,7 @@
 #coding: utf-8
 
-import gkseg as seg
-
 from server.base import logger
-from dictionary import ch_d, type_d, action_type_d
+from dictionary import ch_d, action_type_d, h_d, l_d, t_d
 
 
 # Buggy translating
@@ -12,48 +10,74 @@ from dictionary import ch_d, type_d, action_type_d
 #        order, everything is hardcode.
 #
 # In order to translate the human sentence to machine order, we first do a
-# language segment (currently using [gkseg](http://github/guokr/gkseg), slow
-# but useful), to extract the important part. Then, we look up the word from
-# our set dictionary (called `ch_d` here) and determain its type with another
-# dictionary (called `type_d` here). Additonly, we use `action_type_d`
+# language segment (currently using [jieba](), slow but very useful), to
+# seperate and flag the words. Then, we look up the word from our
+# set dictionary (called `ch_d` here). Additonly, we use `action_type_d`
 # dictionary to determain the action type.
 #
-# I know it's really hard-coding, buggy and useless, but NLP is not a easy
+# I know it's really hard-coded, buggy and useless, but NLP is not a easy
 # task for me now...
+
+def classify(words, required_flags=None):
+    '''Classify the words basic on their flag'''
+    required_flags = required_flags or []
+    ret = dict.fromkeys(required_flags)
+    for k in ret.keys():
+        ret[k] = []
+    for word in words:
+        for k, v in l_d.items():
+            if word.flag in v:
+                ret[k].append(word.word)
+                break
+    for flag in set(ret.keys()) - set(required_flags):
+        ret.pop(flag, None)
+    return ret
+
+
+def find_repeated(d):
+    '''Find repeated duration'''
+    if not d.get('num', None) or \
+       not (d.get('measure', None) or d.get('noun', None)):
+        return None
+
+    basic, unit = None, None
+    for n in d['num']:
+        try:
+            basic = int(n)
+        except:
+            pass
+    for m in d.get('measure', []) + d.get('noun', []):
+        unit = t_d.get(ch_d.get(m, None)[0], None) or unit
+    if basic and unit:
+        return unit(basic)
+    return None
+
+
 def human2machine(msg):
     if not isinstance(msg, unicode):
         msg = msg.decode('utf-8')
-    seg.init()
+
+    #: process with some hard coded translations first
+    for k, v in h_d.items():
+        if msg in k:
+            return v
 
     action = None
     action_type = None
     obj = None
     repeated_duration = 0
-    # FIXME if send a msg like '每30分钟检查一次空调'
-    #       after the segment, it will be:
-    #           [u'\u6bcf3', u'0', u'\u5206\u949f', u'\u68c0\u67e5', u'\u4e00',
-    #            u'\u6b21', u'\u7a7a\u8c03']
-    #       which is out our expected.
-    for word in seg.term(msg):
-        #: is it a repeated job?
-        try:
-            # TODO time unit determinations
-            #      I just suppose all the repeat interval
-            #      is **minute** base. But the arm side
-            #      uses **second**.
-            repeated_duration = int(word) * 60
-        except ValueError:
-            #: tranlate the word
-            en = ch_d.get(word, None)[0]
-            if en:
-                word_type = type_d.get(en)[0]
-                if word_type == 'action':
-                    #: determin the action type
-                    action_type, action = action_type_d.get(en)[0], en
-                elif word_type == 'obj':
-                    obj = en
 
-    seg.destroy()
+    import jieba.posseg as pseg
+    seg = classify(pseg.cut(msg), l_d.keys())
+
+    for v in seg['verb']:
+        action = ch_d.get(v, None)[0] or action
+    action_type = action_type_d.get(action, None)[0]
+
+    for n in seg['noun']:
+        obj = ch_d.get(n, None)[0] or obj
+
+    repeated_duration = find_repeated(seg)
 
     if action and (action_type is not None) and obj:
         return action, action_type, obj, repeated_duration

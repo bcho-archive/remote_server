@@ -93,13 +93,13 @@ e.g.:
             "status": {
                 "hours": 1,
                 "minutes": 2,
-                "seconds": 3,
-                "type": "works_duration" // 描述查询类型
+                "seconds": 3
             },
             "type": 1  // 0 是开关操作，1是查询
         }
     }
 
+时间、电功率、状态（开关）
 
 ### 返回值
 

@@ -7,6 +7,10 @@
     You can look up everythings from dictionary.
 '''
 
+from datetime import datetime
+
+from server.config import datetime_format
+
 
 class Dict(dict):
     def __init__(self, name_value=None):
@@ -33,6 +37,33 @@ class Dict(dict):
                 name_value.append((item, name))
         return Dict(name_value)
 
+
+#: l for labels
+l_d = {
+        'noun': ['n', 'nr', 'ns', 'ng', 'eng'],
+        'time': ['t', 'tg'],
+        'verb': ['v', 'vd', 'vn', 'vf', 'vx', 'vi', 'vg'],
+        'adj': ['a', 'ad', 'an', 'ag', 'al'],
+        'num': ['m', 'mq'],
+        'measure': ['q', 'qv', 'qt']
+}
+
+#: t for time convert helers
+_h = lambda x: x * 3600
+_m = lambda x: x * 60
+_s = lambda x: x * 1
+t_d = {
+        'hour': _h,
+        'hours': _h,
+        'hr': _h,
+        'minute': _m,
+        'minutes': _m,
+        'min': _m,
+        'second': _s,
+        'seconds': _s,
+        'sec': _s
+}
+
 #: d for dictionary
 en_d = Dict((
     ('turnoff', u'关闭'), ('turnoff', u'关'),
@@ -46,18 +77,12 @@ en_d = Dict((
 
     ('hours', u'小时'), ('hour', u'小时'), ('hr', u'小时'),
     ('minutes', u'分钟'), ('minute', u'分钟'), ('min', u'分钟'),
-    ('seconds', u'秒'), ('second', u'秒'), ('sec', u'秒')
+    ('seconds', u'秒'), ('second', u'秒'), ('sec', u'秒'),
+
+    ('power', u'功率'),
 ))
 
 ch_d = en_d.reverse()
-
-type_d = Dict((
-    ('turnon', 'action'), ('turnoff', 'action'),
-    ('query', 'action'),
-
-    ('tv', 'obj'), ('aircondictioner', 'obj'),
-    ('A1', 'obj')
-))
 
 action_type_d = Dict((
     ('turnon', 0), ('turnoff', 0),
@@ -77,12 +102,34 @@ def job_failure(*args, **kwargs):
                         kwargs['obj'], kwargs['action'])
 
 
-def works_duration(*args, **kwargs):
-    basic = u'你家的%s已经工作' % (kwargs['obj'])
+def query(*args, **kwargs):
+    # TODO translating
+    basic = u'截至%s，你家的 %s:' % (
+            datetime.utcnow().strftime(datetime_format),
+            kwargs['obj']
+            )
+
+    # work duration
+    desc = ''
     for eng in ('hours', 'minutes', 'seconds'):
         if eng in kwargs.keys():
-            basic += ' %d %s' % (kwargs[eng], en_d.get(eng)[0])
-    return basic + u'了'
+            desc = desc or u'工作了'
+            desc += ' %s %d' % (en_d.get(eng)[0], kwargs[eng])
+    desc += u'，'
+    basic += desc
+
+    # work status (e.g., power)
+    for eng in ('power'):
+        if eng in kwargs.keys():
+            basic += u' %s是 %s，' % (en_d.get(eng)[0], kwargs[eng])
+
+    return basic
+
+
+def query_all(*args, **kwarsg):
+    #: actually, we have a photo
+    basic = u'截至%s' % datetime.utcnow().strftime(datetime_format)
+    return basic
 
 
 def unknown_command(*args, **kwargs):
@@ -93,6 +140,15 @@ def unknown_command(*args, **kwargs):
 s = {
     'OK': job_ok,
     'FAILURE': job_failure,
-    'works_duration': works_duration,
+    'query': query,
+    'query_all': query_all,
     'unknowncommand': unknown_command
 }
+
+
+#: h for hard-coding
+_query_all = ('query', 1, 'all', 0)
+h_d = Dict((
+    (u'家里的用电器怎样啦', _query_all),
+    (u'检查家里的用电器情况', _query_all)
+))

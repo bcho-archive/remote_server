@@ -22,7 +22,7 @@ def enqueue(job_id, report):
 def get():
     job = db.session.query(Job).filter(Job.status == 2)
     if job.count():
-        job = job.one()
+        job = job.all()[0]
         return job
     else:
         return None

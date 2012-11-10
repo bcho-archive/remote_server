@@ -3,8 +3,10 @@
 import os
 import logging
 
-#: XXX DEV database path
+
 parent = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+#: XXX DEV database path
 database = os.path.join(parent, 'data', 'remote_dev.sqlite')
 database_url = 'sqlite:///%s' % database
 SQLALCHEMY_DATABASE_URI = database_url
@@ -13,6 +15,8 @@ SQLALCHEMY_DATABASE_URI = database_url
 SITE_TITLE = 'remote server'
 project_codename = 'server'  # for initing blueprint
 datetime_format = '%Y-%m-%d %H:%M:%S'
+image_path = os.path.join(parent, 'data', 'imgs')
+unknown_command_path = os.path.join(parent, 'data', 'unkown.txt')
 
 logger_name = project_codename
 log_path = '%s.log' % project_codename

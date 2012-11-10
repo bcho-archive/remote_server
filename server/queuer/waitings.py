@@ -35,7 +35,7 @@ def in_queue(tweet_id):
 
 def get(user_id):
     jobs = db.session.query(Job).filter(
-         Job.user_id == user_id, Job.status == 0).order_by(Job.added_time)
+         Job.user_id == user_id, Job.status <= 0).order_by(Job.added_time)
     if jobs.count():
         return jobs.all()[0]
     else:
