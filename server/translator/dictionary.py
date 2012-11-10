@@ -37,6 +37,33 @@ class Dict(dict):
                 name_value.append((item, name))
         return Dict(name_value)
 
+
+#: l for labels
+l_d = {
+        'noun': ['n', 'nr', 'ns', 'ng', 'eng'],
+        'time': ['t', 'tg'],
+        'verb': ['v', 'vd', 'vn', 'vf', 'vx', 'vi', 'vg'],
+        'adj': ['a', 'ad', 'an', 'ag', 'al'],
+        'num': ['m', 'mq'],
+        'measure': ['q', 'qv', 'qt']
+}
+
+#: t for time convert helers
+_h = lambda x: x * 3600
+_m = lambda x: x * 60
+_s = lambda x: x * 1
+t_d = {
+        'hour': _h,
+        'hours': _h,
+        'hr': _h,
+        'minute': _m,
+        'minutes': _m,
+        'min': _m,
+        'second': _s,
+        'seconds': _s,
+        'sec': _s
+}
+
 #: d for dictionary
 en_d = Dict((
     ('turnoff', u'关闭'), ('turnoff', u'关'),
@@ -56,14 +83,6 @@ en_d = Dict((
 ))
 
 ch_d = en_d.reverse()
-
-type_d = Dict((
-    ('turnon', 'action'), ('turnoff', 'action'),
-    ('query', 'action'),
-
-    ('tv', 'obj'), ('aircondictioner', 'obj'),
-    ('A1', 'obj')
-))
 
 action_type_d = Dict((
     ('turnon', 0), ('turnoff', 0),
