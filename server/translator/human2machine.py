@@ -1,7 +1,5 @@
 #coding: utf-8
 
-import jieba.posseg as pseg
-
 from server.base import logger
 from dictionary import ch_d, action_type_d, h_d, l_d, t_d
 
@@ -22,11 +20,14 @@ from dictionary import ch_d, action_type_d, h_d, l_d, t_d
 
 def classify(words, required_flags=None):
     '''Classify the words basic on their flag'''
-    ret = {}
+    required_flags = required_flags or []
+    ret = dict.fromkeys(required_flags)
+    for k in ret.keys():
+        ret[k] = []
     for word in words:
         for k, v in l_d.items():
             if word.flag in v:
-                ret[k] = ret.get(k, []) + [word.word]
+                ret[k].append(word.word)
                 break
     for flag in set(ret.keys()) - set(required_flags):
         ret.pop(flag, None)
@@ -66,6 +67,7 @@ def human2machine(msg):
     obj = None
     repeated_duration = 0
 
+    import jieba.posseg as pseg
     seg = classify(pseg.cut(msg), l_d.keys())
 
     for v in seg['verb']:
