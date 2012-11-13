@@ -39,19 +39,23 @@ def send():
         return None
 
 
-def fetch():
+def handle_commands(commands):
     def _is_user(name):
         return db.session.query(User).filter(User.name == name).count() > 0
 
-    timeline = bot.get.statuses__mentions_timeline()
-    mentions = timeline.data.info
-    for mention in mentions:
-        if not waitings.in_queue(mention.id) and _is_user(mention.name) and\
-                not unknown.in_queue(mention.id):
-            new_job = waitings.enqueue(mention.text, mention.id, mention.name)
+    for command in commands:
+        if not waitings.in_queue(command.id) and _is_user(command.name) and\
+                not unknown.in_queue(command.id):
+            new_job = waitings.enqueue(command.text, command.id, command.name)
             if new_job:
                 logger.info('found new job <%d %s>' % (
                                     new_job.id, new_job.action))
             else:
-                unknown.enqueue(mention.id, mention.text)
-                repost(s['unknowncommand'](), mention.id)
+                unknown.enqueue(command.id, command.text)
+                repost(s['unknowncommand'](), command.id)
+
+
+def fetch():
+    timeline = bot.get.statuses__mentions_timeline()
+    mentions = timeline.data.info
+    handle_commands(mentions)
