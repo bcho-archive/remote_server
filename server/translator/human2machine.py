@@ -77,7 +77,7 @@ def human2machine(msg):
     for n in seg['noun']:
         obj = ch_d.get(n, None)[0] or obj
 
-    repeated_duration = find_repeated(seg)
+    repeated_duration = find_repeated(seg) or 0
 
     if action and (action_type is not None) and obj:
         return action, action_type, obj, repeated_duration
