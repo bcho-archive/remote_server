@@ -21,5 +21,5 @@ def tweets():
     with open(g['raw'], 'r') as fn:
         l = []
         for c in fn.readlines():
-            l.append(build_tweet(c.decode('utf-8')))
+            l.append(build_tweet(c.decode('utf-8').strip()))
     return l

@@ -45,11 +45,12 @@ def handle_commands(commands):
 
 
 # TODO clean the test job
-def run():
+def run(sleep_time=None):
+    sleep_time = sleep_time or 200
     t = tweets()
     while True:
         if not t:
             t = tweets()
         handle_commands([t.pop()])
         send()
-        sleep(200)
+        sleep(sleep_time)

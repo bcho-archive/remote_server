@@ -8,7 +8,7 @@ from server.tester.run import run
 
 
 if argv[-1] == 'testing':
-    run()
+    run(10)
 else:
     while True:
         bot.fetch()
