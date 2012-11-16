@@ -6,6 +6,9 @@ run_server:
 run_bot:
 	python run_bot.py
 
+offline:
+	python run_bot.py testing
+
 build_db:
 	python make_db.py
 
