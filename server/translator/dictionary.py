@@ -71,7 +71,7 @@ en_d = Dict((
     ('query', u'状态'), ('query', u'情况'), ('query', u'检查'),
     ('query', u'查询'),
 
-    ('tv', u'电视'), ('tv', u'电视机'),
+    ('TV2', u'电视'), ('TV2', u'电视机'),
     ('aircondictioner', u'空调'), ('aircondictionoar', u'冷气机'),
     ('A1', 'A1'),
 
