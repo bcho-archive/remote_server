@@ -69,11 +69,11 @@ en_d = Dict((
     ('turnoff', u'关闭'), ('turnoff', u'关'),
     ('turnon', u'打开'), ('turnon', u'开'),
     ('query', u'状态'), ('query', u'情况'), ('query', u'检查'),
-    ('query', u'查询'),
+    ('query', u'查询'), ('capture', u'拍照'),
 
-    ('TV2', u'电视'), ('TV2', u'电视机'),
-    ('aircondictioner', u'空调'), ('aircondictionoar', u'冷气机'),
-    ('A1', 'A1'),
+    ('TV', u'电视'), ('TV', u'电视机'),
+    ('air condition', u'空调'), ('air condition', u'冷气机'),
+    ('balcony light', u'灯'),
 
     ('hours', u'小时'), ('hour', u'小时'), ('hr', u'小时'),
     ('minutes', u'分钟'), ('minute', u'分钟'), ('min', u'分钟'),
@@ -84,9 +84,10 @@ en_d = Dict((
 
 ch_d = en_d.reverse()
 
+#: 0 -- action 1 -- query action
 action_type_d = Dict((
     ('turnon', 0), ('turnoff', 0),
-    ('query', 1)
+    ('query', 1), ('capture', 0),
 ))
 
 
@@ -110,37 +111,38 @@ def query(*args, **kwargs):
             )
 
     # work duration
-    desc = ''
-    for eng in ('hours', 'minutes', 'seconds'):
-        if eng in kwargs.keys():
-            desc = desc or u'工作了'
-            desc += ' %s %d' % (en_d.get(eng)[0], kwargs[eng])
-    desc += u'，'
+    total_time = int(kwargs.get('time', 0))
+    hours, total_time = total_time / 3600, total_time % 3600
+    minutes, seconds = total_time / 60, total_time % 60
+    desc = '工作了 %d %s %d %s %d %s' % (
+        hours, en_d.get('hours'),
+        minutes, en_d.get('minutes'),
+        seconds, en_d.get('seconds')
+    )
     basic += desc
-
-    # work status (e.g., power)
-    for eng in ('power'):
-        if eng in kwargs.keys():
-            basic += u' %s是 %s，' % (en_d.get(eng)[0], kwargs[eng])
 
     return basic
 
 
-def query_all(*args, **kwarsg):
+def query_all(*args, **kwargs):
     #: actually, we have a photo
     basic = u'截至%s' % datetime.utcnow().strftime(datetime_format)
     return basic
 
 
+def capture(*args, **kwargs):
+    return u'看！'
+
+
 def unknown_command(*args, **kwargs):
     return u'我不懂你的意思……'
-
 
 #: s for sentences
 s = {
     'OK': job_ok,
     'FAILURE': job_failure,
     'query': query,
+    'capture': capture,
     'query_all': query_all,
     'unknowncommand': unknown_command
 }

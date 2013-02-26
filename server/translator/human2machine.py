@@ -79,7 +79,8 @@ def human2machine(msg):
 
     repeated_duration = find_repeated(seg) or 0
 
-    if action and (action_type is not None) and obj:
+    if action and (action_type is not None) and \
+            (action == 'capture' or obj):
         return action, action_type, obj, repeated_duration
     else:
         logger.info('Found unknown command %s' % msg)

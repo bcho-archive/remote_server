@@ -53,8 +53,9 @@ def report_job(job_id):
 
     # FIXME didn't check if it is a valid report here
     report = data['report']
-    #: is query all, save the image
-    if report['action'] == 'query' and report['obj'] == 'all':
+    #: is query all or capture, save the image
+    if (report['action'] == 'query' and report['obj'] == 'all') or \
+            (report['action'] == 'capture'):
         image = request.files.get(request.files.keys()[0])
         imagesbin.save(str(job_id), image)
 
