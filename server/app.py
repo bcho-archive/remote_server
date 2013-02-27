@@ -7,7 +7,7 @@ from utils import register_blueprint
 
 
 #: register blueprints
-for blueprint in ['arm', 'weibot']:
+for blueprint in ['arm', 'weibot', 'offline']:
     register_blueprint(app, blueprint)
 
 
