@@ -7,7 +7,7 @@ from dictionary import ch_d, action_type_d, h_d, l_d, t_d
 # Buggy translating
 #
 # Short: this is a simple dictionary to translate the human order to machine
-#        order, everything is hardcode.
+#        order, everything is hard coded.
 #
 # In order to translate the human sentence to machine order, we first do a
 # language segment (currently using [jieba](), slow but very useful), to
@@ -71,17 +71,19 @@ def human2machine(msg):
     seg = classify(pseg.cut(msg), l_d.keys())
 
     for v in seg['verb']:
-        action = ch_d.get(v, None)[0] or action
-    action_type = action_type_d.get(action, None)[0]
+        action = ch_d.get(v, None)[0]
+        if action:
+            break
+    action = action or ''
+    action_type = action_type_d.get(action, None)
 
     for n in seg['noun']:
-        obj = ch_d.get(n, None)[0] or obj
+        obj = ch_d.get(n, [None])[0] or obj
 
     repeated_duration = find_repeated(seg) or 0
 
-    if action and (action_type is not None) and \
-            (action == 'capture' or obj):
-        return action, action_type, obj, repeated_duration
+    if action_type and action_type.validate(action, obj):
+        return action, obj, repeated_duration
     else:
         logger.info('Found unknown command %s' % msg)
         return None

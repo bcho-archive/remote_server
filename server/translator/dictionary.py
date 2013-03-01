@@ -10,45 +10,52 @@
 from datetime import datetime
 
 from server.config import datetime_format
+from .action import Action
 
 
-class Dict(dict):
-    def __init__(self, name_value=None):
-        for name, value in name_value:
-            if not super(Dict, self).get(name):
-                self[name] = [value]
+class MultiDict(dict):
+    '''A dict obj which one key can have serval children.'''
+
+    def __init__(self, kv=None):
+        kv = kv or []
+        for k, v in kv:
+            if not super(MultiDict, self).get(k):
+                self[k] = v
             else:
-                self[name].append(value)
+                self[k].append(v)
 
-    def get(self, attr, default=[]):
-        # when self[name] is not found, return name
-        # instead of None
+    def get(self, k, default=None):
+        #: return [k] if k is not found.
+        default = default or [k]
         if not isinstance(default, list):
             default = [default]
-        default = default or [attr]
-        if not isinstance(default, list):
-            default = [default]
-        return super(Dict, self).get(attr, default)
+        return super(MultiDict, self).get(k, default)
+
+    def __setitem__(self, k, v):
+        if k not in self.keys():
+            super(MultiDict, self).__setitem__(k, [v])
+        else:
+            self[k].append(v)
 
     def reverse(self):
-        name_value = []
-        for name, items in self.items():
-            for item in items:
-                name_value.append((item, name))
-        return Dict(name_value)
+        kv = []
+        for k, v in self.items():
+            for item in v:
+                kv.append((item, k))
+        return MultiDict(kv)
 
 
-#: l for labels
-l_d = {
-        'noun': ['n', 'nr', 'ns', 'ng', 'eng'],
-        'time': ['t', 'tg'],
-        'verb': ['v', 'vd', 'vn', 'vf', 'vx', 'vi', 'vg'],
-        'adj': ['a', 'ad', 'an', 'ag', 'al'],
-        'num': ['m', 'mq'],
-        'measure': ['q', 'qv', 'qt']
-}
+#: vocabulary labels
+l_d = dict([
+        ('noun', ['n', 'nr', 'ns', 'ng', 'eng']),
+        ('time', ['t', 'tg']),
+        ('verb', ['v', 'vd', 'vn', 'vf', 'vx', 'vi', 'vg']),
+        ('adj', ['a', 'ad', 'an', 'ag', 'al']),
+        ('num', ['m', 'mq']),
+        ('measure', ['q', 'qv', 'qt'])
+])
 
-#: t for time convert helers
+#: time convert helpers
 _h = lambda x: x * 3600
 _m = lambda x: x * 60
 _s = lambda x: x * 1
@@ -64,8 +71,8 @@ t_d = {
         'sec': _s
 }
 
-#: d for dictionary
-en_d = Dict((
+#: dictionary
+en_d = MultiDict([
     ('turnoff', u'关闭'), ('turnoff', u'关'),
     ('turnon', u'打开'), ('turnon', u'开'),
     ('query', u'状态'), ('query', u'情况'), ('query', u'检查'),
@@ -80,20 +87,19 @@ en_d = Dict((
     ('seconds', u'秒'), ('second', u'秒'), ('sec', u'秒'),
 
     ('power', u'功率'),
-))
-
+])
 ch_d = en_d.reverse()
 
-#: 0 -- action 1 -- query action
-action_type_d = Dict((
-    ('turnon', 0), ('turnoff', 0),
-    ('query', 1), ('capture', 0),
-))
+#: actions defination
+action_type_d = dict([
+    ('turnon', Action('turnon', 0, 0, 1)),
+    ('turnoff', Action('turnoff', 0, 0, 1)),
+    ('query', Action('query', 1, 0, 1)),
+    ('query_all', Action('query_all', 1, 1, 0)),
+    ('capture', Action('capture', 1, 1, 0))
+])
 
-
-#: some sentence builders
-
-
+#: sentences
 def job_ok(*args, **kwargs):
     return u'OK啦！'
 
@@ -102,7 +108,7 @@ def job_failure(*args, **kwargs):
     return u'出问题啦！！！！！！1 你家的%s不能%s！' % (
                         kwargs['obj'], kwargs['action'])
 
-
+    
 def query(*args, **kwargs):
     # TODO translating
     basic = u'截至%s，你家的 %s:' % (
@@ -111,6 +117,7 @@ def query(*args, **kwargs):
             )
 
     # work duration
+    # TODO test duration converting
     total_time = int(kwargs.get('time', 0))
     hours, total_time = total_time / 3600, total_time % 3600
     minutes, seconds = total_time / 60, total_time % 60
@@ -123,9 +130,7 @@ def query(*args, **kwargs):
 
     return basic
 
-
 def query_all(*args, **kwargs):
-    #: actually, we have a photo
     basic = u'截至%s' % datetime.utcnow().strftime(datetime_format)
     return basic
 
@@ -137,7 +142,7 @@ def capture(*args, **kwargs):
 def unknown_command(*args, **kwargs):
     return u'我不懂你的意思……'
 
-#: s for sentences
+
 s = {
     'OK': job_ok,
     'FAILURE': job_failure,
@@ -148,9 +153,9 @@ s = {
 }
 
 
-#: h for hard-coding
+#: some hard coding cases
 _query_all = ('query', 1, 'all', 0)
-h_d = Dict((
+h_d = MultiDict((
     (u'家里的用电器怎样啦', _query_all),
     (u'检查家里的用电器情况', _query_all)
 ))

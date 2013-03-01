@@ -10,19 +10,17 @@ from server.translator import human2machine
 def enqueue(action, tweet_id, username):
     summary = human2machine(action)
     if summary:
-        action, action_type, obj, repeated = summary
+        action, obj, repeated = summary
         user = db.session.query(User).filter(User.name == username).one()
         job = Job()
         job.action = action
         job.obj = obj
         job.tweet_id = tweet_id
-        job.type = action_type
         job.status = 0
         job.repeated = repeated
         job.added_time = datetime.utcnow()
         db.session.add(job)
         job.user = user
-        logger.debug(user.name)
         db.session.commit()
         return job
     else:
