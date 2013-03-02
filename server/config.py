@@ -18,6 +18,7 @@ project_codename = 'server'  # for initing blueprint
 datetime_format = '%Y-%m-%d %H:%M:%S'
 image_path = os.path.join(data_path, 'imgs')
 unknown_command_path = os.path.join(parent, 'data', 'unkown.txt')
+unknown_command_log = 'unknown_command.log'
 
 logger_name = project_codename
 log_path = '%s.log' % project_codename

@@ -80,7 +80,7 @@ en_d = MultiDict([
 
     ('TV', u'电视'), ('TV', u'电视机'),
     ('air condition', u'空调'), ('air condition', u'冷气机'),
-    ('balcony light', u'灯'),
+    ('balcony light', u'灯'), ('balcony light', u'电灯'),
 
     ('hours', u'小时'), ('hour', u'小时'), ('hr', u'小时'),
     ('minutes', u'分钟'), ('minute', u'分钟'), ('min', u'分钟'),

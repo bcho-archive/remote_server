@@ -4,31 +4,17 @@ import logging
 
 from flask import Flask
 
+import config
 from models import db
-from config import log_path, log_format, log_level
+from logger import get_file_logging_handler as file_logger 
+from logger import get_console_logging_handler as console_logger
 
 #: init logger
-# XXX every time you want to log somethings, you should
-#
-#       from base import logger
-#
-#     rather use logging.getLogger(), because the logger
-#     may not be set up. Maybe later I will fix this issue.
-#     (maybe use a logger factory will be better.)
 logger = logging.getLogger(__name__)
-logger.setLevel(log_level)
-
-formatter = logging.Formatter(log_format)
-
-file_handler = logging.FileHandler(log_path)
-file_handler.setLevel(log_level)
-file_handler.setFormatter(formatter)
-console_handler = logging.StreamHandler()
-console_handler.setLevel(log_level)
-console_handler.setFormatter(formatter)
-
-logger.addHandler(console_handler)
-logger.addHandler(file_handler)
+logger.setLevel(config.log_level)
+formatter = logging.Formatter(config.log_format)
+for i in [console_logger, file_logger]:
+    logger.addHandler(i(formatter))
 
 #: init app
 app = Flask(__name__)

@@ -19,14 +19,13 @@ from .generator import tweets
 def send():
     report = reports.get()
     if report:
-        if report.type == 1 and report.obj == 'all':
+        if report.name == 'query' and report.obj == 'all' or \
+                report.name == 'capture':
             logger.info('post image')
         else:
             logger.info('sent report <%s>' % (report.report))
         reports.archive(report.id)
         logger.info('archived job <%d %s>' % (report.id, report.action))
-    else:
-        return None
 
 
 def handle_commands(commands):

@@ -1,7 +1,18 @@
 #coding: utf-8
 
-from server.base import logger
+import logging
+
+from server.config import unknown_command_log, log_format
+from server.logger import get_file_logging_handler as file_logger
+from server.logger import get_console_logging_handler as console_logger
 from dictionary import ch_d, action_type_d, h_d, l_d, t_d
+
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+formatter = logging.Formatter(log_format)
+logger.addHandler(file_logger(formatter, log_path=unknown_command_log))
+logger.addHandler(console_logger(formatter))
 
 
 # Buggy translating
@@ -72,8 +83,6 @@ def human2machine(msg):
 
     for v in seg['verb']:
         action = ch_d.get(v, None)[0]
-        if action:
-            break
     action = action or ''
     action_type = action_type_d.get(action, None)
 
@@ -85,5 +94,7 @@ def human2machine(msg):
     if action_type and action_type.validate(action, obj):
         return action, obj, repeated_duration
     else:
-        logger.info('Found unknown command %s' % msg)
+        logger.debug('Found unknown command %s: <%s, %s, %s>' % \
+                (msg, action, obj, str(repeated_duration)))
+        logger.debug('Seg: %s' % (seg))
         return None
