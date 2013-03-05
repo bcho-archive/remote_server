@@ -1,0 +1,25 @@
+#signup-form {
+  width: 800px;
+  margin: 0 auto;
+  margin-top: 40px;
+
+  .error {
+    color: #cb3f20;
+  }
+}
+
+#login-form {
+  max-width: 300px;
+  margin: 0 auto;
+  margin-top: 40px;
+
+  .error {
+    color: #cb3f20;
+  }
+
+  input[type=text],
+  input[type=password] {
+    margin-bottom: 15px;
+    width: 300px;
+  }
+}
