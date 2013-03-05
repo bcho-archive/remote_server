@@ -11,13 +11,12 @@ from helpers import require_login, user_login, user_logout, get_current_user
 @app.before_request
 def before_request():
     g.user = get_current_user()
-    print g.user
 
 
 @app.route('/')
 @require_login
 def timeline():
-    return 'hello world'
+    return render_template('timeline.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])

@@ -5,6 +5,8 @@
     <title>{% block title %}Weibo{% endblock %}</title>
     <link rel="stylesheet" href="static/css/bootstrap.css" />
     <link rel="stylesheet" href="static/css/style.css" />
+    {% block head %}
+    {% endblock %}
   </head>
   <body>
     <div class="container">
@@ -12,4 +14,6 @@
       {% endblock %}
     </div>
   </body>
+  {% block body %}
+  {% endblock %}
 </html>

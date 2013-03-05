@@ -1,0 +1,93 @@
+{% extends 'basic.html' %}
+
+{% block title %}
+timeline
+{% endblock %}
+
+{% block head %}
+<style type="text/css">
+    body {
+        background-image: url("{{ url_for('static', filename='img/timeline.png') }}");
+    }
+</style>
+{% endblock %}
+
+{% block main %}
+<div class="navbar navbar-fixed-top navbar-inverse">
+  <div class="navbar-inner">
+    <div class="container">
+      <a href="#" class="brand">
+        3 bugs
+      </a>
+      <ul class="nav">
+        <li class="active"><a href="#">timeline</a></li>
+        <li><a href="/logout">logout</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+<!-- top nav -->
+
+<div class="wrap row">
+  <section id="main" class="offset2 span8">
+    <header>
+      <h1>Talk something...</h1>
+    </header>
+    <div id="compose" class="clearfix">
+      <form id="compose-form" action="">
+        <textarea name="content" rows="4"></textarea>
+        <input type="submit" value="Tweet" class="btn btn-info pull-right" />
+      </form>
+    </div>
+    <hr />
+    <!-- compose tweet -->
+    <div id="timeline">
+      <div class="tweet clearfix">
+        <div class="avatar">
+          <img src="{{ url_for('static', filename='img/1.jpg') }}"/>
+        </div>
+        <div class="content">
+          <article class="clearfix">
+            <p>a very very very very very very very very very very long Hello World</p>
+            <footer class="meta pull-right">hbc ~ 13 minutes ago ~ via web</footer>
+          </article>
+        </div>
+      </div>
+      <!-- tweet -->
+      <div class="tweet clearfix">
+        <div class="avatar">
+          <img src="{{ url_for('static', filename='img/1.jpg') }}"/>
+        </div>
+        <div class="content">
+          <article class="clearfix">
+            <p>hello <a href="#">@hbc</a></p>
+            <img src="{{ url_for('static', filename='data/435.png') }}" />
+            <footer class="meta pull-right">hbc ~ 13 minutes ago ~ via web</footer>
+          </article>
+        </div>
+      </div>
+      <div class="tweet clearfix">
+        <div class="avatar">
+          <img src="{{ url_for('static', filename='img/1.jpg') }}"/>
+        </div>
+        <div class="content">
+          <article class="clearfix">
+            <p>hello retweet</p>
+            <div class="retweet clearfix">
+              <div class="content">
+                <article>
+                  <a href="#" class="author">hbc<span>:</span></a>
+                  <p>a very very very very very very very very very very long Hello World</p>
+                </article>
+              </div>
+            </div>
+            <footer class="meta pull-right">hbc ~ 13 minutes ago ~ via 3 bugs</footer>
+          </article>
+        </div>
+      </div>
+    </div>
+    <!-- timeline -->
+  </section>
+</div>
+<!-- main -->
+{% endblock %}

@@ -15,3 +15,94 @@
   #login-form input[type=password] {
     margin-bottom: 15px;
     width: 300px; }
+
+.wrap {
+  margin-top: 75px; }
+
+#main {
+  margin-bottom: 25px;
+  padding: 10px 5px;
+  border: 1px solid #f1f1f1;
+  border-radius: 5px;
+  background-color: #ffffff; }
+  #main header h1 {
+    margin: 0 0 0 10px;
+    font-size: 25px;
+    line-height: 37.5px;
+    font-weight: 400; }
+  #main #compose #compose-form {
+    width: 97%;
+    margin: 15px auto 0; }
+    #main #compose #compose-form textarea {
+      width: 100%;
+      display: block;
+      margin-bottom: 5px;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizeing: border-box;
+      box-sizeing: border-box;
+      resize: none; }
+  #main hr {
+    margin: 10px auto 17px;
+    height: 4px;
+    border: 0; }
+  #main #timeline .tweet {
+    margin-bottom: 15px; }
+    #main #timeline .tweet .avatar {
+      width: 60px;
+      float: left; }
+      #main #timeline .tweet .avatar img {
+        width: 50px;
+        margin: 0 5px; }
+    #main #timeline .tweet .content {
+      padding: 2px 5px;
+      float: left; }
+      #main #timeline .tweet .content article {
+        width: 550px;
+        padding: 0px 5px;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizeing: border-box;
+        box-sizeing: border-box; }
+        #main #timeline .tweet .content article p {
+          font-size: 18px;
+          line-height: 27px; }
+        #main #timeline .tweet .content article img {
+          display: block;
+          width: 95%;
+          margin: 0 auto 15px;
+          border: 5px solid transparent;
+          border-radius: 2px;
+          background-color: #ccc; }
+        #main #timeline .tweet .content article div.retweet {
+          width: 85%;
+          margin: 0 0 15px;
+          webkit-box-sizeing: border-box;
+          -moz-box-sizeing: border-box;
+          box-sizeing: border-box; }
+          #main #timeline .tweet .content article div.retweet .content article {
+            padding: 7px 2px 5px 7px;
+            min-height: 50px;
+            max-width: 525px;
+            background-color: #fcfcfc;
+            border-radius: 2px; }
+            #main #timeline .tweet .content article div.retweet .content article a.author {
+              display: block;
+              float: left;
+              margin-right: 5px; }
+              #main #timeline .tweet .content article div.retweet .content article a.author span {
+                color: #000; }
+              #main #timeline .tweet .content article div.retweet .content article a.author:hover {
+                text-decoration: none; }
+            #main #timeline .tweet .content article div.retweet .content article p {
+              display: block;
+              float: left;
+              color: #333; }
+            #main #timeline .tweet .content article div.retweet .content article a, #main #timeline .tweet .content article div.retweet .content article p {
+              font-size: 15px;
+              line-height: 22.5px; }
+        #main #timeline .tweet .content article footer.meta {
+          font-size: 10px;
+          line-height: 15px;
+          color: #666; }
+
+.brand {
+  padding-left: 12px; }
