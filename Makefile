@@ -9,6 +9,9 @@ run_bot:
 offline:
 	python run_bot.py testing
 
+offline-weibo:
+	python run_offline.py
+
 build_db:
 	python make_db.py
 
