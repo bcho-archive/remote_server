@@ -55,7 +55,7 @@ def report_job(job_id):
     report = data['report']
     #: is query all or capture, save the image
     if (report['action'] == 'query' and report['obj'] == 'all') or \
-            (report['action'] == 'capture'):
+            (report['action'] == 'capture') and request.files.keys():
         image = request.files.get(request.files.keys()[0])
         imagesbin.save(str(job_id), image)
 

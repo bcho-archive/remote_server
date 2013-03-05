@@ -9,7 +9,9 @@ def machine2human(report):
     status, action_type = report['status'], int(report['type'])
 
     #: is an action
-    if action_type == 0:
+    if report['action'] == 'capture':
+        return s['capture']()
+    elif action_type == 0:
         return s[status](action=action, obj=obj)
 
     #: is a query
