@@ -1,10 +1,12 @@
 #coding: utf-8
 
+import re
+
 from flask import request, abort, render_template, redirect, url_for
 from flask import g
 
 from app import app, db
-from models import User
+from models import User, Tweet, Mention
 from helpers import require_login, user_login, user_logout, get_current_user
 
 
@@ -16,7 +18,8 @@ def before_request():
 @app.route('/')
 @require_login
 def timeline():
-    return render_template('timeline.html')
+    timeline = Tweet.query.order_by('id desc').all()
+    return render_template('timeline.html', timeline=timeline)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -54,3 +57,23 @@ def signup():
         else:
             error = 'create failed'
     return render_template('signup.html', error=error)
+
+
+@app.route('/tweet/create', methods=['POST'])
+@require_login
+def create_tweet():
+    content = request.form['content']
+
+    tweet = Tweet(content, g.user.id)
+    db.session.add(tweet)
+    db.session.commit()
+    
+    pattern = re.compile('@(\w+)')
+    for name in pattern.findall(content):
+        user = User.query.filter_by(username=name).first()
+        if Mention.validate(user.id, tweet.id) and user is not g.user:
+            mention = Mention(user.id, tweet.id)
+            db.session.add(mention)
+    db.session.commit()
+
+    return redirect(url_for('timeline'))
