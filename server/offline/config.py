@@ -1,3 +1,3 @@
 #coding: utf-8
 
-current_user = 'bcxxxxxx'
+offline_uri = 'http://127.0.0.1:1234/api'

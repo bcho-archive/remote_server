@@ -8,7 +8,7 @@ parent = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 data_path = os.path.join(parent, 'data')
 
 #: basic config
-project_codename = 'snsh_offline'
+project_codename = 'offline'
 datetime_format = '%Y-%m-%d %H:%M:%S'
 image_path = os.path.join(data_path, 'imgs')
 
@@ -24,7 +24,7 @@ log_format = '%(levelname)s - %(message)s'
 log_level = logging.DEBUG
 
 #: enabled blueprints
-blueprints = []
+blueprints = ['api']
 
 #: security
 secret_key = 'snsh'

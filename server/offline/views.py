@@ -1,38 +1,49 @@
 #coding: utf-8
 
-from flask import Blueprint, request, redirect, url_for, abort, render_template
+from flask import Blueprint, url_for, request
 
-from server.queuer import waitings
 from server.base import db
-from .models import Tweet
-from .config import current_user
 
-app = Blueprint('offline', __name__, static_folder='static',
-        template_folder='templates')
+import config
+from models import OfflineUser
+
+app = Blueprint('offline', __name__)
+
+
+def register_user(user_id, weibo_token, is_bot=None):
+    user = OfflineUser.query.filter_by(user_id=user_id).first()
+    if not user:
+        user = OfflineUser(user_id, weibo_token, is_bot)
+        db.session.add(user)
+    else:
+        if user.weibo_token != weibo_token:
+            user.weibo_token = weibo_token
+            user.token = user.generate_token(weibo_token)
+    db.session.commit()
+    return user.token
 
 
 @app.route('/')
-@app.route('/timeline')
-def timeline():
-    tweets = Tweet.query.all()
-    tweets.reverse()
-    return render_template('timeline.html', tweets=tweets)
+def startpoint():
+    return '''<a href="%s/setup?callback=127.0.0.1:5000%s">
+setup your token here</a>''' % \
+        (config.offline_uri, url_for('.callback'))
 
 
-@app.route('/compose', methods=['POST'])
-def compose():
-    if request.method == 'POST':
-        parent_id = request.form.get('parent_id', None)
-        parent_id = None if parent_id == '0' else parent_id
-        t = Tweet(request.form['content'], current_user, parent_id)
-        db.session.add(t)
-        db.session.commit()
-        waitings.enqueue(t.content, t.id, current_user)
-        return redirect(url_for('.timeline'))
-    abort(403)
+@app.route('/callback')
+def callback():
+    token = register_user(int(request.args['user_id']), request.args['token'])
+    return 'your arm server token: %s' % (token)
 
 
-@app.route('/tweet/<int:id>', methods=['GET'])
-def view_tweet(id):
-    tweet = Tweet.query.filter_by(id=id).first_or_404()
-    return tweet.content
+@app.route('/bot')
+def bot_startpoint():
+    return '''<a href="%s/setup?callback=127.0.0.1:5000%s">
+setup your token here</a>''' % \
+        (config.offline_uri, url_for('.bot_callback'))
+
+
+@app.route('/bot_callback')
+def bot_callback():
+    register_user(int(request.args['user_id']), request.args['token'], True)
+    return 'ok'

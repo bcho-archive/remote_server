@@ -25,7 +25,8 @@ class User(db.Model):
         self.username = username
         self.password = self.encrypt(password + config.secret_key)
 
-    def encrypt(self, raw):
+    def encrypt(self, raw=None):
+        raw = raw or str(time())
         return sha(raw).hexdigest()
 
     @staticmethod

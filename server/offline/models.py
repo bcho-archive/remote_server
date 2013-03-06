@@ -1,23 +1,28 @@
 #coding: utf-8
 
-from datetime import datetime
+from time import time
+from sha import sha
 
 from server.base import db
 
 
-class Tweet(db.Model):
+class OfflineUser(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.String(140), nullable=False)
-    post_time = db.Column(db.DateTime, default=datetime.utcnow)
-    user = db.Column(db.String(50), nullable=False)
+    user_id = db.Column(db.Integer, unique=True)
+    weibo_token = db.Column(db.String(40), unique=True)
+    is_bot = db.Column(db.Integer, default=0)
+    token = db.Column(db.String(5), unique=True)
 
-    parent_id = db.Column(db.Integer)
+    def __init__(self, user_id, weibo_token, is_bot=None):
+        self.user_id, self.weibo_token = user_id, weibo_token
+        self.token = self.generate_token(weibo_token)
+        if is_bot:
+            self.is_bot = 1
 
-    def __init__(self, content, user, pid=None):
-        self.content, self.user, self.parent_id = content, user, pid
 
-    @staticmethod
-    def parent(self):
-        if self.parent_id:
-            return db.query.filter_by(id=self.parent_id).first()
-        return None
+    def generate_token(self, salt):
+        raw = '%s%s' % (time(), salt)
+        while True:
+            token = sha(raw).hexdigest()[0:5]
+            if OfflineUser.query.filter_by(token=token).count() == 0:
+                return token
