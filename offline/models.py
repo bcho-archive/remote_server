@@ -54,6 +54,7 @@ class User(db.Model):
 class Tweet(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(140), nullable=False)
+    #: share one folder, use image filename
     image = db.Column(db.String(200))
     date = db.Column(db.DateTime, default=datetime.now)
     retweet_id = db.Column(db.Integer)

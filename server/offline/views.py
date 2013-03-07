@@ -3,24 +3,33 @@
 from flask import Blueprint, url_for, request
 
 from server.base import db
+from server.models import User, Bot
 
 import config
-from models import OfflineUser
 
 app = Blueprint('offline', __name__)
 
 
-def register_user(user_id, weibo_token, is_bot=None):
-    user = OfflineUser.query.filter_by(user_id=user_id).first()
-    if not user:
-        user = OfflineUser(user_id, weibo_token, is_bot)
+def register_user(user_name, user_id, weibo_token, is_bot=None):
+    if is_bot:
+        user = Bot()
+        user.name, user.weibo_id, user.access_token = (user_name, user_id, 
+                weibo_token)
+        user.type = 2
         db.session.add(user)
+        db.session.commit()
     else:
-        if user.weibo_token != weibo_token:
-            user.weibo_token = weibo_token
-            user.token = user.generate_token(weibo_token)
-    db.session.commit()
-    return user.token
+        user = User.query.filter_by(weibo_id=user_id).first()
+        if user:
+            user.access_token, user.name = weibo_token, user_name
+            db.session.commit()
+        else:
+            user = User()
+            user.name, user.weibo_id, user.access_token = (user_name, user_id, 
+                    weibo_token)
+            db.session.add(user)
+            db.session.commit()
+        return user.generate_token()
 
 
 @app.route('/')
@@ -32,7 +41,8 @@ setup your token here</a>''' % \
 
 @app.route('/callback')
 def callback():
-    token = register_user(int(request.args['user_id']), request.args['token'])
+    token = register_user(request.args['user_name'],
+            request.args['user_id'], request.args['token'])
     return 'your arm server token: %s' % (token)
 
 
@@ -45,5 +55,6 @@ setup your token here</a>''' % \
 
 @app.route('/bot_callback')
 def bot_callback():
-    register_user(int(request.args['user_id']), request.args['token'], True)
+    register_user(request.args['user_name'],
+            request.args['user_id'], request.args['token'], True)
     return 'ok'

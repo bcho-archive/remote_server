@@ -133,7 +133,7 @@ class Bot(db.Model, DictModel):
     bot = None
 
     id = db.Column(db.Integer, primary_key=True)
-    type = db.Column(db.Integer, default=1)  # 0: sina weibo, 1: qq weibo
+    type = db.Column(db.Integer, default=1)  # 0: sina weibo, 1: qq weibo 2: offline weibo
 
     # weibo user infomations
     name = db.Column(db.String(100))
