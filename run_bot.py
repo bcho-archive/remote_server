@@ -3,7 +3,7 @@
 from time import sleep
 from sys import argv
 
-from server.weibot import bot
+from server.offline.bot import bot
 from server.tester.run import run
 
 
