@@ -39,11 +39,14 @@ timeline
         <input type="submit" value="Tweet" class="btn btn-info pull-right" />
       </form>
     </div>
-    <hr />
+    <hr class="sep" />
+    <div class="sep">
+        <a href="{{ url_for('timeline') }}">view new tweet</a>
+    </div>
     <!-- compose tweet -->
     <div id="timeline">
       {% for tweet in timeline %}
-      <div class="tweet clearfix">
+      <div class="tweet clearfix" data-id="{{ tweet.id }}">
         <div class="avatar">
           <img src="{{ url_for('static', filename='img/avatar/%d.jpg' % (tweet.author.id)) }}"/>
         </div>

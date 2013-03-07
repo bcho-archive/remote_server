@@ -40,6 +40,13 @@ def tweet(user):
     return jsonify(id=t.id)
 
 
+@app.route('/tweet/update/<int:last_id>', methods=['GET'])
+@require_login
+def check_update(last_id):
+    t = Tweet.query.order_by('id desc').first()
+    return jsonify(last_id=t.id)
+
+
 @app.route('/retweet', methods=['POST'])
 @require_token
 def retweet(user):

@@ -63,11 +63,33 @@
     }
   }
 
-  hr {
+  div.sep, hr.sep {
     margin: 10px auto 17px;
+  }
+
+  hr.sep {
     height: 4px;
 
     border: 0; 
+  }
+
+  div.sep {
+    background-color: #f6ee61;
+
+    a {
+      display: block;
+
+      text-align: center;
+      color: #4e4e4e;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+
+    &:hover {
+      background-color: #f2da10;
+    }
   }
 
   #timeline {

@@ -41,10 +41,21 @@
       -moz-box-sizeing: border-box;
       box-sizeing: border-box;
       resize: none; }
-  #main hr {
-    margin: 10px auto 17px;
+  #main div.sep, #main hr.sep {
+    margin: 10px auto 17px; }
+  #main hr.sep {
     height: 4px;
     border: 0; }
+  #main div.sep {
+    background-color: #f6ee61; }
+    #main div.sep a {
+      display: block;
+      text-align: center;
+      color: #4e4e4e; }
+      #main div.sep a:hover {
+        text-decoration: none; }
+    #main div.sep:hover {
+      background-color: #f2da10; }
   #main #timeline .tweet {
     margin-bottom: 20px; }
     #main #timeline .tweet .avatar {
