@@ -84,4 +84,7 @@ def human2machine(msg):
         return action, action_type, obj, repeated_duration
     else:
         logger.info('Found unknown command %s' % msg)
+        logger.debug('%s %s %s %s' % (str(action), str(action_type), str(obj),
+                str(repeated_duration)))
+        logger.debug(seg)
         return None
