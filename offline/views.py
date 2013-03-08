@@ -27,8 +27,8 @@ def login():
     error = ''
     if request.method == 'POST':
         user = User.query.filter_by(
-                username=request.form['username']).first_or_404()
-        if user.login(request.form['password']):
+                username=request.form['username']).first()
+        if user and user.login(request.form['password']):
             db.session.commit()
             user_login(user)
             return redirect(url_for('.timeline'))
