@@ -36,16 +36,18 @@ class Bot(object):
         params = {
                 'token': self.bot.access_token        
         }
-        return requests.post('%s/tweet', data=data, params=params)
+        return requests.post('%s/tweet' % self.api_uri,
+                data=data, params=params)
 
     def send(self):
         report = reports.get()
         if report:
-            if report.type == 1 and report.obj == 'all':
-                resp = self.upload_image(report.report. str(report.id),
+            if report.type == 1 and report.obj == 'all' or \
+                    report.action == 'capture':
+                resp = self.upload_image(report.report, str(report.id),
                                          report.user.name)
             else:
-                resp = self.repost(report.report, report.id)
+                resp = self.repost(report.report, report.tweet_id)
             reports.archive(report.id)
             logger.info('archived job <%d %s>' % (report.id, report.action))
             return resp
