@@ -105,7 +105,7 @@ def job_failure(*args, **kwargs):
 
 def query(*args, **kwargs):
     # TODO translating
-    basic = u'截至%s，你家的 %s:' % (
+    basic = u'截至 %s，你家的 %s :' % (
             datetime.utcnow().strftime(datetime_format),
             kwargs['obj']
             )
@@ -114,10 +114,10 @@ def query(*args, **kwargs):
     total_time = int(kwargs.get('time', 0))
     hours, total_time = total_time / 3600, total_time % 3600
     minutes, seconds = total_time / 60, total_time % 60
-    desc = '工作了 %d %s %d %s %d %s' % (
-        hours, en_d.get('hours'),
-        minutes, en_d.get('minutes'),
-        seconds, en_d.get('seconds')
+    desc = u'工作了 %d %s %d %s %d %s' % (
+        hours, en_d.get('hours')[0],
+        minutes, en_d.get('minutes')[0],
+        seconds, en_d.get('seconds')[0]
     )
     basic += desc
 
