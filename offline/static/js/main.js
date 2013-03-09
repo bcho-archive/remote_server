@@ -14,6 +14,7 @@
             }
         });
 
+        /* new tweet pooling */
         setInterval(function() {
             var last_id = $('div.tweet').attr('data-id');
             $.ajax({
@@ -29,5 +30,18 @@
                 }
             });
         }, 3000);
+
+        /* mention auto complete */
+        $('#compose-form textarea').bind('input propertychange', function(e) {
+            var content = $('#compose-form textarea').val(),
+                bot_name = '3bugs',
+                index;
+
+            index = content.lastIndexOf('@');
+            if (index != -1 && index === content.length - 1) {
+                content += bot_name + ' ';
+                $('#compose-form textarea').focus().val('').val(content);
+            }
+        });
     });
 })();
