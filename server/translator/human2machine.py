@@ -59,8 +59,8 @@ def human2machine(msg):
 
     #: process with some hard coded translations first
     for k, v in h_d.items():
-        if msg in k:
-            return v
+        if k in msg.split('@3bugs')[-1]:
+            return v[0]
 
     action = None
     action_type = None

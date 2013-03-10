@@ -157,3 +157,10 @@ h_d = Dict((
     (u'开灯', ('turnon', 1, 'balcony light', 0)),
     (u'关灯', ('turnoff', 1, 'balcony light', 0))
 ))
+
+
+#: a for auto-reply
+a = {
+        u'辛苦啦': lambda *args, **kwargs: u'没事啦~',
+        u'你好': lambda *args, **kwargs: u'主人好',
+}

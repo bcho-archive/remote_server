@@ -4,7 +4,7 @@ import requests
 
 from server.base import logger
 from server.queuer import reports, waitings, unknown
-from server.translator.dictionary import s
+from server.translator.dictionary import s, a
 
 from server.models import Bot as BotModel
 from server.models import User
@@ -58,10 +58,24 @@ class Bot(object):
         def _is_user(name):
             return User.query.filter_by(name=name).count() > 0
 
+        def _auto_reply(content):
+            s = content.split('@3bugs')[-1]
+            for k, v in a.items():
+                if k in s or s in k:
+                    return v
+            return None
+
         for command in commands:
             if not waitings.in_queue(command['id']) and \
                     _is_user(command['name']) and \
                     not unknown.in_queue(command['id']):
+
+                auto_reply = _auto_reply(command['content'])
+                if auto_reply:
+                    self.repost(auto_reply(), command['id'])
+                    unknown.enqueue(command['id'], command['content'])
+                    continue
+
                 new_job = waitings.enqueue(command['content'],
                         command['id'], command['name'])
                 if new_job:
